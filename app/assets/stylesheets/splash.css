@@ -7,7 +7,7 @@
 }
 
 .logo {
-  width: 50%;
+  width: 35%;
 }
 
 .sign-in a {
@@ -20,13 +20,13 @@
 
 .login,
 .signup {
-  background: #3979c3;
+  background: #452bb2;
   padding: 10px 20px;
   border-radius: 8px;
 }
 
 .login:hover,
 .signup:hover {
-  background: #22466e;
+  background: #6955c6;
   transition: all 0.5s ease-in-out;
 }

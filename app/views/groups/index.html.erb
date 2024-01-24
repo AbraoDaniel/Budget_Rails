@@ -18,11 +18,10 @@
           <%end%>
           <div class= "group-footers">
             <div>
-              <small class= "timelapse"><%= group.timelapse%> ago</small>
             </div>
             <div class= "show-delete">
-              <%= link_to "View", group %>
-              <%= button_to "Delete", group, method: :delete, class: "delete" %>
+              <%= link_to "Visualizar", group %>
+              <%= button_to "Remover", group, method: :delete, class: "delete" %>
             </div>
           </div>
         </div>
@@ -35,5 +34,10 @@
 </div>
 
 <div class= "new-group">
-  <div class= "new-group-btn"><%= link_to "Add new category", new_group_path %></div>
+  <%= link_to new_group_path do%>
+    <div class= "new-group-btn">
+      Adicionar categoria
+      <%= image_tag "plus-small.png", class: "plus-icon" %>
+    </div>
+  <% end %>
 </div>

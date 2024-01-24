@@ -45,7 +45,7 @@ body {
 }
 
 .group-img {
-  width: 90px;
+  width: 45px;
 }
 
 .group-footers {
@@ -76,21 +76,21 @@ body {
 .new-group {
   text-align: center;
   padding: 10px 13px;
-  background-color: #60b524;
+  background-color: #452bb2;
   width: 30%;
   margin: 20px auto;
   cursor: pointer;
 }
 
 .new-group-btn {
-  border: 2px solid #fff;
   width: 80%;
   margin: auto;
   padding: 10px 13px;
 }
 
-.new-group:active {
-  background-color: #315c12;
+
+.new-group:hover, .new-group:active {
+  background-color: #6955c6;
 }
 
 .new-group-wrapper {

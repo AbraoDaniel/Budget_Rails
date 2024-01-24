@@ -15,20 +15,14 @@ class GroupsController < ApplicationController
     @group = Group.new
 
     @icons = [
-      { 'name' => 'Choose a category icon',
-        'source' => '/icons/Accomodation.png' },
-      { 'name' => 'Food',
-        'source' => '/icons/Accomodation.png' },
-      { 'name' => 'Home appliances',
-        'source' => '/icons/appliances.png' },
-      { 'name' => 'Clothing',
-        'source' => '/icons/clothing.png' },
-      { 'name' => 'Children',
-        'source' => '/icons/kids.png' },
-      { 'name' => 'Transportation',
-        'source' => '/icons/travels.png' },
-      { 'name' => 'Others',
-        'source' => '/icons/others.png' }
+      { 'name' => 'Choose a category icon', 'source' => '/icons/Accomodation.png' },
+      {'name' => 'Mercado', 'source' => '/icons/carrinho-de-compras.png'},
+      { 'name' => 'Food', 'source' => '/icons/Accomodation.png' },
+      { 'name' => 'Home appliances', 'source' => '/icons/appliances.png' },
+      { 'name' => 'Clothing', 'source' => '/icons/clothing.png' },
+      { 'name' => 'Children', 'source' => '/icons/kids.png' },
+      { 'name' => 'Transportation', 'source' => '/icons/travels.png' },
+      { 'name' => 'Others', 'source' => '/icons/others.png' }
     ]
   end
 
@@ -66,11 +60,12 @@ class GroupsController < ApplicationController
 
   # DELETE /groups/1 or /groups/1.json
   def destroy
-    @group.destroy
-
-    respond_to do |format|
-      format.html { redirect_to groups_url, notice: 'Group was successfully destroyed.' }
-      format.json { head :no_content }
+    if @group.present?
+      @group.destroy
+      respond_to do |format|
+        format.html { redirect_to groups_url, notice: 'Group was successfully destroyed.' }
+        format.json { head :no_content }
+      end
     end
   end
 

@@ -23,7 +23,7 @@ body {
 }
 
 .header {
-  background-color: #3979c3;
+  background-color: #452bb2;
   height: 100px;
   padding: 25px 30px;
   display: flex;
@@ -36,6 +36,15 @@ body {
 
 .back {
   width: 30px;
+  filter: invert();
+}
+
+.plus-icon {
+  width: 20px;
+  margin: auto;
+  filter: invert();
+  position: relative;
+  top: 4px;
 }
 
 .off {
