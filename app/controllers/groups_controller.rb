@@ -15,14 +15,14 @@ class GroupsController < ApplicationController
     @group = Group.new
 
     @icons = [
-      { 'name' => 'Choose a category icon', 'source' => '/icons/Accomodation.png' },
-      {'name' => 'Mercado', 'source' => '/icons/carrinho-de-compras.png'},
-      { 'name' => 'Food', 'source' => '/icons/Accomodation.png' },
-      { 'name' => 'Home appliances', 'source' => '/icons/appliances.png' },
-      { 'name' => 'Clothing', 'source' => '/icons/clothing.png' },
-      { 'name' => 'Children', 'source' => '/icons/kids.png' },
-      { 'name' => 'Transportation', 'source' => '/icons/travels.png' },
-      { 'name' => 'Others', 'source' => '/icons/others.png' }
+      { 'name' => 'Teste', 'source' => '/icons/travels.png' }
+      # {'name' => 'Mercado', 'source' => '/icons/carrinho-de-compras.png'},
+      # { 'name' => 'Food', 'source' => '/icons/Accomodation.png' },
+      # { 'name' => 'Home appliances', 'source' => '/icons/appliances.png' },
+      # { 'name' => 'Clothing', 'source' => '/icons/clothing.png' },
+      # { 'name' => 'Children', 'source' => '/icons/kids.png' },
+      # { 'name' => 'Transportation', 'source' => '/icons/travels.png' },
+      # { 'name' => 'Others', 'source' => '/icons/others.png' }
     ]
   end
 

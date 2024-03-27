@@ -2,7 +2,7 @@ class Group < ApplicationRecord
   belongs_to :user
   has_and_belongs_to_many :operations, dependent: :destroy
 
-  validates :icon, :name, presence: true
+  validates :name, presence: true
 
   def timelapse
     start_time = created_at

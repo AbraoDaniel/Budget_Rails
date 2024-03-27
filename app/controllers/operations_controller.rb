@@ -4,7 +4,7 @@ class OperationsController < ApplicationController
 
   def index
     @group = Group.find(params[:group_id])
-    @operations = @group.operations.order(created_at: :desc)
+    @operations = Operation.all.where("group_id = ?", @group.id).order(created_at: :desc) rescue nil
   end
 
   # GET /operations/1 or /operations/1.json
@@ -15,26 +15,31 @@ class OperationsController < ApplicationController
     @operation = Operation.new
     @operations = Operation.all
     @groups = Group.created_by_current_user(current_user)
+
+    @operation_types = [
+      { 'name' => 'Receita', 'source' => '0' },
+      { 'name' => 'Despesa', 'source' => '1' }
+    ]
   end
 
   def edit; end
 
   def create
+    @group = Group.find(params[:group_id])
     params = operation_params
-    @operation = Operation.new(name: params[:name], amount: params[:amount])
+    @operation = Operation.new(name: params[:name], amount: params[:amount], operation_type: 1, group_id: @group.id)
     @operation.author = current_user
-    @group_ids = params[:group_ids]
-    if @group_ids.present?
-      @group_ids.each do |id|
-        @group = Group.find(id) unless id == ''
-        @operation.groups.push(@group) unless @group.nil?
-      end
-    end
-
+    # @group_ids = params[:group_ids]
+    # if @group_ids.present?
+    #   @group_ids.each do |id|
+    #     @group = Group.find(id) unless id == ''
+    #     @operation.groups.push(@group) unless @group.nil?
+    #   end
+    # end
     respond_to do |format|
       if @operation.save
         format.html do
-          redirect_to group_operations_url(@operation.groups.first.id), notice: 'Transaction was successfully created.'
+          redirect_to group_operations_url(@group.id), notice: 'Transaction was successfully created.'
         end
         format.json { render :show, status: :created, location: @operation }
       else
@@ -59,6 +64,7 @@ class OperationsController < ApplicationController
 
   # DELETE /operations/1 or /operations/1.json
   def destroy
+    raise @operation.inspect
     @operation.destroy
 
     respond_to do |format|
@@ -78,6 +84,6 @@ class OperationsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def operation_params
-    params.require(:operation).permit(:name, :amount, group_ids: [])
+    params.require(:operation).permit(:name, :amount, :operation_type, :group_id)
   end
 end
