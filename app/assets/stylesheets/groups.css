@@ -48,6 +48,11 @@ body {
   width: 45px;
 }
 
+.my-profile {
+  text-decoration: none;
+  color: white;
+}
+
 .group-footers {
   display: flex;
   justify-content: space-between;
@@ -94,7 +99,7 @@ body {
 }
 
 .new-group-wrapper {
-  background-color: #60b524;
+  background-color: #a792ff;
   width: 40%;
   padding: 30px;
   margin: 70px auto;

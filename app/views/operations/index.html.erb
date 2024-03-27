@@ -28,7 +28,11 @@
       <% end %>
   </div>
   <div class= "new-group">
-    <div class= "new-group-btn"><%= link_to "New operation", new_group_operation_path(@operations) %>
-    </div>
+    <%= link_to new_group_operation_path do%>
+      <div class= "new-group-btn">
+        Nova transação
+        <%= image_tag "plus-small.png", class: "plus-icon" %>
+      </div>
+    <% end %>
   </div>
 </div>
