@@ -10,12 +10,19 @@
   <% if @operations.any? %>
     <div class= "total-transactions">
       <small class= "total-transactions">
-      <strong>Valor total de transações:</strong>
-      R$<%= @operations.inject(0) { |sum, t| sum += t.amount  }%> 
+      <strong>Valor total de receita:</strong>
+      R$
+      <%= @operations.inject(0) do |sum, t| 
+        if t.operation_type == 0
+          sum += t.amount 
+        elsif t.operation_type == 1
+          sum -= t.amount 
+        end
+        sum
+      end%> 
       </small>
     </div>
   <% end %>
-
 
   <div id="operations">
       <% if @operations.any? %>

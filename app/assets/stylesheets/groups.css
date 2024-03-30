@@ -59,6 +59,10 @@ body {
   align-items: baseline;
 }
 
+.group-footers button:hover {
+  background-color: #bb0707;
+}
+
 .group-footers button {
   color: white;
   background-color: #252525;

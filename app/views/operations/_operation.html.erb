@@ -10,14 +10,13 @@
       <%elsif operation.operation_type == 1%>
         <%= image_tag "seta-gasto.png", class: "gasto"%>
       <%end %>
-      R$ <%= operation.amount %>
+      <%= number_to_currency(operation.amount, :unit => "R$ ", :separator => ",", :delimiter => ".")  %>
     </p>
   </div>
   <div class= "group-footers">
-    <small class= "timelapse"><%= operation.created_at.strftime("Registrado em %B %d, %Y")%></small>
+    <small class= "timelapse"><%= operation.created_at.strftime("Registrada em %B %d, %Y")%></small>
     <div>
-    <%= button_to "Delete", @operation, method: :delete %>
+      <%= button_to "Remover", delete_operation_operation_path(@group.id), method: :delete, params: { operation_id: operation.id } %>
     </div>
-
   </div>
 </div>

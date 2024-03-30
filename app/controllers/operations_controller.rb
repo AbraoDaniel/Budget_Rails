@@ -55,9 +55,20 @@ class OperationsController < ApplicationController
     end
   end
 
+  def delete_operation
+    @operation = Operation.find_by(id: params[:operation_id]) rescue nil
+    if @operation.destroy
+      respond_to do |format|
+        format.html do
+          redirect_to group_operations_url(@group.id), notice: 'Transaction was successfully deleted.'
+        end
+        format.json { head :no_content }
+      end
+    end
+  end
+
   # DELETE /operations/1 or /operations/1.json
   def destroy
-    raise @operation.inspect
     @operation.destroy
 
     respond_to do |format|

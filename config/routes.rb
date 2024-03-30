@@ -9,9 +9,9 @@ Rails.application.routes.draw do
     resources :operations, only: [:index, :create, :new, :show, :edit, :update, :destroy]
   end
 
-  # resources :users, defaults: {format: :json} do
-  #   member do
-  #     get "get_user_informations"
-  #   end
-  # end
+  resources :operations, defaults: {format: :json} do
+    member do
+      delete "delete_operation"
+    end
+  end
 end
