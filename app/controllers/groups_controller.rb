@@ -14,15 +14,13 @@ class GroupsController < ApplicationController
   def new
     @group = Group.new
 
-    @icons = [
-      { 'name' => 'Teste', 'source' => '/icons/travels.png' }
-      # {'name' => 'Mercado', 'source' => '/icons/carrinho-de-compras.png'},
-      # { 'name' => 'Food', 'source' => '/icons/Accomodation.png' },
-      # { 'name' => 'Home appliances', 'source' => '/icons/appliances.png' },
-      # { 'name' => 'Clothing', 'source' => '/icons/clothing.png' },
-      # { 'name' => 'Children', 'source' => '/icons/kids.png' },
-      # { 'name' => 'Transportation', 'source' => '/icons/travels.png' },
-      # { 'name' => 'Others', 'source' => '/icons/others.png' }
+    @group_types = [
+      {'name' => 'Alimentação', 'source' => '/icons/carrinho-de-compras.png'},
+      {'name' => 'Moradia', 'source' => 'icons/casa.png'},
+      {'name' => 'Lazer', 'source' => '/icons/controle.png'},
+      {'name' => 'Saúde', 'source' => '/icons/estetoscopio.png' },
+      {'name' => 'Transporte', 'source' => '/icons/carro.png'},
+      {'name' => 'Outros', 'source' => '/icons/rede.png'}
     ]
   end
 
@@ -32,8 +30,9 @@ class GroupsController < ApplicationController
   # POST /groups or /groups.json
   def create
     @group = current_user.groups.new(group_params)
-    # @group.user = @user
-
+    if params[:group][:group_type].present?
+      @group.icon = params[:group][:group_type]
+    end
     respond_to do |format|
       if @group.save
         format.html { redirect_to groups_url, notice: 'Group was successfully created.' }
@@ -49,7 +48,7 @@ class GroupsController < ApplicationController
   def update
     respond_to do |format|
       if @group.update(group_params)
-        format.html { redirect_to group_url(@group), notice: 'Group was successfully updated.' }
+        format.html { redirect_to groups_path, notice: 'Group was successfully updated.' }
         format.json { render :show, status: :ok, location: @group }
       else
         format.html { render :edit, status: :unprocessable_entity }

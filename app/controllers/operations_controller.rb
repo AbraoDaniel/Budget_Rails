@@ -22,7 +22,8 @@ class OperationsController < ApplicationController
     ]
   end
 
-  def edit; end
+  def edit
+  end
 
   def create
     @group = Group.find(params[:group_id])
@@ -57,12 +58,13 @@ class OperationsController < ApplicationController
 
   def delete_operation
     @operation = Operation.find_by(id: params[:operation_id]) rescue nil
+    group_id = @operation.group_id
     if @operation.destroy
       respond_to do |format|
         format.html do
-          redirect_to group_operations_url(@group.id), notice: 'Transaction was successfully deleted.'
+          redirect_to group_operations_url(group_id), notice: 'Transaction was successfully deleted.'
+          format.json { head :no_content }
         end
-        format.json { head :no_content }
       end
     end
   end
