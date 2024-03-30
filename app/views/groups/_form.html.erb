@@ -13,14 +13,14 @@
     <% end %>
 
     <div>
-      <%= form.label "Tipo de gasto", style: "display: block" %>
+      <%= form.label "Tipo de transação", style: "display: block" %>
       <div class= "dropdown">
         <%= form.select :icon, @icons.map { |icon| [icon['name'], icon['source']] } %>
       </div> 
     </div>
 
     <div class= "group-name">
-      <%= form.label :name, style: "display: block" %>
+      <%= form.label "Nome", style: "display: block" %>
       <%= form.text_field :name %>
     </div>
 

@@ -1,6 +1,9 @@
 .total-transactions {
   text-align: center;
   margin-top: 20px;
+  margin-bottom: 20px;
+  font-size: 16px;
+  color: white;
 }
 
 .new-operation-wrapper {
@@ -41,6 +44,20 @@
 
 .create-btn {
   text-align: center;
+}
+
+.receita {
+  width: 35px;
+  transform: rotate(180deg);
+  top: 10px;
+  position: relative;
+}
+
+.gasto {
+  width: 35px;
+  transform: rotate(180deg);
+  top: 10px;
+  position: relative;
 }
 
 @media screen and (max-width: 768px) {

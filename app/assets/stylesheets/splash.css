@@ -10,7 +10,9 @@
 }
 
 .logo {
-  width: 35%;
+  width: 40%;
+  margin-top: 110px;
+  margin-bottom: -100px;
 }
 
 .sign-in a {
@@ -19,17 +21,19 @@
   margin-bottom: 15px;
   color: #fff;
   text-decoration: none;
+  font-weight: 550;
 }
 
 .login,
 .signup {
-  background: #452bb2;
+  background: black;
   padding: 10px 20px;
   border-radius: 8px;
+  box-shadow: 0px 2px 6px rgba(255, 255, 255, 0.315);
 }
 
 .login:hover,
 .signup:hover {
-  background: #6955c6;
+  background: rgb(7, 7, 7);
   transition: all 0.5s ease-in-out;
 }

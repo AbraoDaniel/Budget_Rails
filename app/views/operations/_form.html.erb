@@ -18,9 +18,9 @@
     </div>
 
     <div>
-      <%= form.label "Tipo de gasto", style: "display: block" %>
+      <%= form.label "Tipo de transação", style: "display: block" %>
       <div class= "dropdown">
-        <%= form.select :icon, @operation_types.map { |operation_type| [operation_type['name'], operation_type['source']] } %>
+        <%= form.select :operation_type, @operation_types.map { |operation_type| [operation_type['name'], operation_type['source']] } %>
       </div> 
     </div>
 

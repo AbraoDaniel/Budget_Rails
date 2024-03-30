@@ -5,11 +5,16 @@
     </p>
 
     <p>
-      $<%= operation.amount %>
+      <%if operation.operation_type == 0%>
+        <%= image_tag "seta-receita.png", class: "receita"%>
+      <%elsif operation.operation_type == 1%>
+        <%= image_tag "seta-gasto.png", class: "gasto"%>
+      <%end %>
+      R$ <%= operation.amount %>
     </p>
   </div>
   <div class= "group-footers">
-    <small class= "timelapse"><%= operation.timelapse%> ago</small>
+    <small class= "timelapse"><%= operation.created_at.strftime("Registrado em %B %d, %Y")%></small>
     <div>
     <%= button_to "Delete", @operation, method: :delete %>
     </div>

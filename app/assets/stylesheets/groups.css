@@ -56,7 +56,20 @@ body {
 .group-footers {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: baseline;
+}
+
+.group-footers button {
+  color: white;
+  background-color: #252525;
+  padding: 8px 11px;
+  border: none;
+  border-radius: 8px;
+  margin-top: 20px;
+  cursor: pointer;
+  width: 80px;
+  font-weight: 600;
+  box-shadow: 1px 1px 3px rgba(255, 255, 255, 0.13);
 }
 
 .show-delete {
@@ -81,10 +94,13 @@ body {
 .new-group {
   text-align: center;
   padding: 10px 13px;
-  background-color: #452bb2;
+  background-color: #252525;
   width: 30%;
   margin: 20px auto;
   cursor: pointer;
+  border-radius: 8px;
+  font-weight: 600;
+  box-shadow: 1px 1px 3px rgba(255, 255, 255, 0.13);
 }
 
 .new-group-btn {
@@ -95,7 +111,7 @@ body {
 
 
 .new-group:hover, .new-group:active {
-  background-color: #6955c6;
+  background-color: #424242;
 }
 
 .new-group-wrapper {
