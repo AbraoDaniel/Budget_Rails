@@ -27,15 +27,8 @@ class OperationsController < ApplicationController
   def create
     @group = Group.find(params[:group_id])
     params = operation_params
-    @operation = Operation.new(name: params[:name], amount: params[:amount], operation_type: 1, group_id: @group.id)
+    @operation = Operation.new(name: params[:name], amount: params[:amount], operation_type: params[:operation_type], group_id: @group.id)
     @operation.author = current_user
-    # @group_ids = params[:group_ids]
-    # if @group_ids.present?
-    #   @group_ids.each do |id|
-    #     @group = Group.find(id) unless id == ''
-    #     @operation.groups.push(@group) unless @group.nil?
-    #   end
-    # end
     respond_to do |format|
       if @operation.save
         format.html do

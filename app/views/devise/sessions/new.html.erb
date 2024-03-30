@@ -1,34 +1,21 @@
 <div class="sessions-wrapper">  
-  <div class= "header"> 
-    <%= link_to root_path do %>
-    <div>
-      <%= image_tag "back.png", class:"back"%>
-    </div>
-    <%end%>
-    <div><h2>Acessar conta</h2></div>
-    <div></div>
-    
-  </div>
   <div class= "session-container">
-
+    <div class= 'form-login-header'>
+      ACESSAR CONTA
+    </div>
     <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
       <div class="field">
+        <%= image_tag "person.png", class: "login-icons" %>
         <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "Informe seu email", class: "input" %>
       </div>
 
       <div class="field">
+        <%= image_tag "padlock.png", class: "login-icons" %>
         <%= f.password_field :password, autocomplete: "current-password", placeholder: "Informe sua senha", class: "input"  %>
       </div>
 
-      <% if devise_mapping.rememberable? %>
-        <div class="field">
-          <%= f.check_box :remember_me %>
-          <%= f.label "Mantenha-me conectado" %>
-        </div>
-      <% end %>
-
       <div class="actions">
-        <%= f.submit "Entrar" %>
+        <%= f.submit "Acessar" %>
       </div>
     <% end %>
 
