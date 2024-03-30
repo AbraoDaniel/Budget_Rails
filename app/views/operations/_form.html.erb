@@ -14,10 +14,10 @@
 
     <div class= "group-name">
       <%= form.label "Nome", style: "display: block" %>
-      <%= form.text_field :name %>
+      <%= form.text_field :name, placeholder: "Insira o nome da transação" %>
     </div>
 
-    <div>
+    <div class="group-name"> 
       <%= form.label "Tipo de transação", style: "display: block" %>
       <div class= "dropdown">
         <%= form.select :operation_type, @operation_types.map { |operation_type| [operation_type['name'], operation_type['source']] } %>
@@ -28,17 +28,8 @@
       <%= form.label "Valor", style: "display: block" %>
       <%= form.number_field :amount %>
     </div>
-    <p>Select category to add new transaction</p>
-    
-    <%#if @groups%>
-        <%#= form.label :groups %>
-        <%#= form.collection_check_boxes(:group_ids, @groups, :id, :name) do |b| %>
-            <%#= b.check_box + b.label %>
-        <%# end %>
-    <%#end%>
-
-    <div class="submit-btn">
-      <%= form.submit %>
+    <div class="actions">
+      <%= form.submit "Criar" %>
     </div>
   <% end %>
 </div>

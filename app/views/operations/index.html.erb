@@ -10,15 +10,40 @@
   <% if @operations.any? %>
     <div class= "total-transactions">
       <small class= "total-transactions">
-      <strong>Valor total de transações:</strong>
-      R$<%= @operations.inject(0) { |sum, t| sum += t.amount  }%> 
+      <strong>Valor total de receita:</strong>
+      R$
+      <%= @operations.inject(0) do |sum, t| 
+        if t.operation_type == 0
+          sum += t.amount 
+        end
+        sum
+      end%> 
       </small>
+      <br>
+      <br>
+
+      <strong>Valor total de despesas:</strong>
+      R$
+      <%= @operations.inject(0) do |sum, t| 
+        if t.operation_type == 1
+          sum += t.amount 
+        end
+        sum
+      end%> 
+
     </div>
   <% end %>
 
-
   <div id="operations">
       <% if @operations.any? %>
+        <div class= "new-group">
+          <%= link_to new_group_operation_path do%>
+            <div class= "new-group-btn">
+              Nova transação
+              <%= image_tag "plus-small.png", class: "plus-icon" %>
+            </div>
+          <% end %>
+        </div>
         <div class= "group">
           <% @operations.each do |operation| %>
             <div style="margin-top: 15px">
@@ -29,14 +54,15 @@
         </div>
       <% else %>
         <h2 style="text-align: center; color: white; margin-top: 20px">Você não possui transações cadastradas</h2>
+        <div class= "new-group">
+          <%= link_to new_group_operation_path do%>
+            <div class= "new-group-btn">
+              Nova transação
+              <%= image_tag "plus-small.png", class: "plus-icon" %>
+            </div>
+          <% end %>
+        </div>
       <% end %>
   </div>
-  <div class= "new-group">
-    <%= link_to new_group_operation_path do%>
-      <div class= "new-group-btn">
-        Nova transação
-        <%= image_tag "plus-small.png", class: "plus-icon" %>
-      </div>
-    <% end %>
-  </div>
+  
 </div>

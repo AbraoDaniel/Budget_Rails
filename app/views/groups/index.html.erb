@@ -10,8 +10,18 @@
 </div>
 
 
-<div id="groups">
+
+<div>
   <%if @groups.any?%>
+  <div class= "new-group">
+    <%= link_to new_group_path do%>
+      <div class= "new-group-btn">
+        Adicionar categoria
+        <%= image_tag "plus-small.png", class: "plus-icon" %>
+      </div>
+    <% end %>
+  </div>
+  <div id="groups">
     <% @groups.each do |group| %>
       <%if can? :manage, group%>
         <div class= "group">
@@ -22,24 +32,29 @@
             <div>
             </div>
             <div class= "show-delete">
-              <%= link_to "Visualizar", group %>
-              <%= button_to "Remover", group, method: :delete, class: "delete" %>
+              <%= link_to edit_group_path(group) do %>
+                <%= image_tag "edit-pencil.png", class:"group-icons" %>
+              <%end%>
+              <%= button_to group, method: :delete, class:"group-icons" do %>
+                <%= image_tag "remove-trash.png", class:"group-icons" %>
+              <%end%>
             </div>
           </div>
         </div>
       <% end %>
     <% end %>
+  </div>
   <%else%>
-      <h3 style="text-align: center; color: white">Você não possui categorias cadastradas</h3>
+    <h2 style="text-align: center; color: white; margin-top: 20px">Você não possui categorias cadastradas</h2>
+    <div class= "new-group">
+      <%= link_to new_group_path do%>
+        <div class= "new-group-btn">
+          Adicionar categoria
+          <%= image_tag "plus-small.png", class: "plus-icon" %>
+        </div>
+      <% end %>
+  </div>
   <%end%>
-
 </div>
 
-<div class= "new-group">
-  <%= link_to new_group_path do%>
-    <div class= "new-group-btn">
-      Adicionar categoria
-      <%= image_tag "plus-small.png", class: "plus-icon" %>
-    </div>
-  <% end %>
-</div>
+
