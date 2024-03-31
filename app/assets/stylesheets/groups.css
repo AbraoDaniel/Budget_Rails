@@ -59,9 +59,19 @@ body {
   align-items: baseline;
 }
 
-/* .group-footers button:hover {
-  background-color: #bb0707;
-} */
+.remove-user-button button:hover {
+  color: #bb0707;
+}
+
+.remove-user-button button {
+  color: white;
+  background-color: transparent;
+  border: none;
+  border-radius: 8px;
+  margin-top: 20px;
+  cursor: pointer;
+  font-weight: 600;
+}
 
 .group-footers button {
   color: white;

@@ -1,8 +1,37 @@
 <%= render @user %>
 
 <div>
-  <%= link_to "Editar informações", edit_user_path(@user) %> |
-  <%= link_to "Voltar para lista de gastos", root_path %>
+  <div class= "session-container">
+    <div class= 'form-login-header'>
+      INFORMAÇÕES DO USUÁRIO
+    </div>
 
-  <%= button_to "Deletar usuário", @user, method: :delete %>
+    <div class="group-name">
+      Nome
+      <br>
+      <input type="text" readonly value=<%= @user.name %> style="margin-top: 5px"/> 
+    </div>
+
+    <div class="group-name">
+      Email
+      <br>
+      <input type="email" readonly value=<%= @user.email %> style="margin-top: 5px"/> 
+    </div>
+
+    <div class="group-name">
+      Membro desde
+      <br>
+      <input type="text" readonly value=<%= @user.created_at.strftime("%d/%m/%Y") %> style="margin-top: 5px"/> 
+    </div>
+
+    <div class="actions-link">
+      <%= link_to "Voltar para lista de gastos", root_path %>
+    </div>
+
+    <div class="remove-user-button">
+      <%= button_to "Remover usuário", @user, method: :delete %>
+    </div>
+    
+  </div>
+  
 </div>
