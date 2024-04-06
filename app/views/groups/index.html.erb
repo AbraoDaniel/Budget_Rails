@@ -1,12 +1,21 @@
 <div class= "header">
-  <%= link_to root_path do  %><%= image_tag "return-arrow.png", class:"back"%><%end%>
-  <h2 class="category">Categorias de Transações</h2>
-  <%= link_to user_path(current_user.id) do %>
-    <%= image_tag "person.png", class:"my-profile-icon"%>
-  <%end%>
-  <%= button_to destroy_user_session_path, method: :delete, class:"close-app" do %> 
-    <%= image_tag "close-app.png", class:"close-app"%>
-  <%end%>
+  <div>
+  </div>
+  <div>
+    <h2 class="category">Categorias de Transações</h2>
+  </div>
+  <div style="display: flex">
+    <%= link_to reports_path do %>
+      <%= image_tag "reports.png", class: "my-profile-icon"%>
+    <%end%>
+    <%= link_to user_path(current_user.id) do %>
+      <%= image_tag "person.png", class:"my-profile-icon"%>
+    <%end%>
+   
+    <%= button_to destroy_user_session_path, method: :delete, class:"close-app" do %> 
+      <%= image_tag "close-app.png", class:"close-app"%>
+    <%end%>
+  </div>
 </div>
 
 

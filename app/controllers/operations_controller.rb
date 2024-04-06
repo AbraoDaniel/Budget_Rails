@@ -12,9 +12,9 @@ class OperationsController < ApplicationController
 
   # GET /operations/new
   def new
+    @group = Group.find(params[:group_id])
     @operation = Operation.new
     @operations = Operation.all
-    @groups = Group.created_by_current_user(current_user)
 
     @operation_types = [
       { 'name' => 'Receita', 'source' => '0' },
@@ -23,6 +23,12 @@ class OperationsController < ApplicationController
   end
 
   def edit
+    @group = Group.find(params[:group_id])
+    @operation = Operation.find_by(id: params[:id]) rescue nil
+    @operation_types = [
+      { 'name' => 'Receita', 'source' => '0' },
+      { 'name' => 'Despesa', 'source' => '1' }
+    ]
   end
 
   def create
@@ -30,10 +36,18 @@ class OperationsController < ApplicationController
     params = operation_params
     @operation = Operation.new(name: params[:name], amount: params[:amount], operation_type: params[:operation_type], group_id: @group.id)
     @operation.author = current_user
+    if @operation.present?
+      if @operation.operation_type == 0
+        sumAmount = @group.group_amount + params[:amount].to_f
+      else
+        sumAmount = @group.group_amount - params[:amount].to_f
+      end
+      @group.update_columns(group_amount: sumAmount)
+    end
     respond_to do |format|
       if @operation.save
         format.html do
-          redirect_to group_operations_url(@group.id), notice: 'Transaction was successfully created.'
+          redirect_to group_operations_path(@group.id), notice: 'Transaction was successfully created.'
         end
         format.json { render :show, status: :created, location: @operation }
       else
@@ -45,9 +59,11 @@ class OperationsController < ApplicationController
 
   # PATCH/PUT /operations/1 or /operations/1.json
   def update
+    @operation = Operation.find_by(id: params[:id]) rescue nil
+    @group_id = @operation.group_id
     respond_to do |format|
       if @operation.update(operation_params)
-        format.html { redirect_to group_operations_url(@operation), notice: 'Operation was successfully updated.' }
+        format.html { redirect_to group_operations_path(group_id), notice: 'Operation was successfully updated.' }
         format.json { render :show, status: :ok, location: @operation }
       else
         format.html { render :edit, status: :unprocessable_entity }

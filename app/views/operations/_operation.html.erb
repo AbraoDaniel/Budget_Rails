@@ -16,6 +16,9 @@
   <div class= "group-footers">
     <small class= "timelapse"><%= operation.created_at.strftime("Registrada em %d / %m / %Y")%></small>
     <div class="show-delete">
+      <%= link_to edit_group_operation_path(@group.id, operation.id) do %>
+        <%= image_tag "edit-pencil.png", class:"group-icons" %>
+      <%end%>
       <%= button_to delete_operation_operation_path(@group.id), method: :delete, params: { operation_id: operation.id } do %>
         <%= image_tag "remove-trash.png", class:"group-icons" %>
       <%end%>

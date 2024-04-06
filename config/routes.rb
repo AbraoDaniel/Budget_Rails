@@ -9,6 +9,15 @@ Rails.application.routes.draw do
     resources :operations, only: [:index, :create, :new, :show, :edit, :update, :destroy]
   end
 
+  resources :reports, only: [:index, :create, :new, :show, :edit, :update, :destroy] do
+  end
+
+  resources :reports, defaults: {format: :json} do
+    collection do
+      post "generate_operation_report"
+    end
+  end
+
   resources :operations, defaults: {format: :json} do
     member do
       delete "delete_operation"

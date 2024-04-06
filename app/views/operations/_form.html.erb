@@ -1,20 +1,11 @@
-<div class= "form">
-  <%= form_with model: @operation, url: group_operations_path, method: :post do |form| %>
-    <% if operation.errors.any? %>
-      <div style="color: red">
-        <h2><%= pluralize(operation.errors.count, "error") %> prohibited this operation from being saved:</h2>
-
-        <ul>
-          <% operation.errors.each do |error| %>
-            <li><%= error.full_message %></li>
-          <% end %>
-        </ul>
-      </div>
-    <% end %>
-
+<div class= "session-container">
+  <div class= 'form-login-header'>
+    <%= image_tag @group.icon, style:"width: 35px; margin-right: 15px; margin-bottom: -8px"%><%if @operation.id %> EDITAR TRANSAÇÃO<%else%><span style="margin-left: -10px">NOVA TRANSAÇÃO<span><%end%>
+  </div>
+  <%= form_with model: @operation, url: @operation.id ? edit_group_operation_path(@operation.group_id,@operation.id) : group_operations_path, method: :post do |form| %>
     <div class= "group-name">
       <%= form.label "Nome", style: "display: block" %>
-      <%= form.text_field :name, placeholder: "Insira o nome da transação" %>
+      <%= form.text_field :name, value: @operation.name, placeholder: "Insira o nome da transação" %>
     </div>
 
     <div class="group-name"> 
@@ -29,7 +20,7 @@
       <%= form.number_field :amount %>
     </div>
     <div class="actions">
-      <%= form.submit "Criar" %>
+      <%= form.submit "Salvar" %>
     </div>
   <% end %>
 </div>
