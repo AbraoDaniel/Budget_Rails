@@ -5,6 +5,7 @@ class GroupsController < ApplicationController
   # GET /groups or /groups.json
   def index
     @groups = Group.where(user_id: current_user.id)
+    # raise @groups.inspect
   end
 
   # GET /groups/1 or /groups/1.json
@@ -15,17 +16,26 @@ class GroupsController < ApplicationController
     @group = Group.new
 
     @group_types = [
-      {'name' => 'Alimentação', 'source' => '/icons/carrinho-de-compras.png'},
-      {'name' => 'Moradia', 'source' => 'icons/casa.png'},
-      {'name' => 'Lazer', 'source' => '/icons/controle.png'},
-      {'name' => 'Saúde', 'source' => '/icons/estetoscopio.png' },
-      {'name' => 'Transporte', 'source' => '/icons/carro.png'},
-      {'name' => 'Outros', 'source' => '/icons/rede.png'}
+      {'name' => 'Alimentação', 'source' => '/icons/salada.png'},
+      {'name' => 'Moradia', 'source' => '/icons/casa-icon.png'},
+      {'name' => 'Lazer', 'source' => '/icons/coco.png'},
+      {'name' => 'Saúde', 'source' => '/icons/cuidados-de-saude.png' },
+      {'name' => 'Transporte', 'source' => '/icons/onibus-escolar.png'},
+      {'name' => 'Outros', 'source' => '/icons/outros.png'}
     ]
   end
 
   # GET /groups/1/edit
-  def edit; end
+  def edit; 
+    @group_types = [
+      {'name' => 'Alimentação', 'source' => '/icons/salada.png'},
+      {'name' => 'Moradia', 'source' => '/icons/casa-icon.png'},
+      {'name' => 'Lazer', 'source' => '/icons/coco.png'},
+      {'name' => 'Saúde', 'source' => '/icons/cuidados-de-saude.png' },
+      {'name' => 'Transporte', 'source' => '/icons/onibus-escolar.png'},
+      {'name' => 'Outros', 'source' => '/icons/outros.png'}
+    ]
+  end
 
   # POST /groups or /groups.json
   def create
@@ -46,6 +56,9 @@ class GroupsController < ApplicationController
 
   # PATCH/PUT /groups/1 or /groups/1.json
   def update
+    if params[:group][:group_type].present?
+      @group.icon = params[:group][:group_type]
+    end
     respond_to do |format|
       if @group.update(group_params)
         format.html { redirect_to groups_path, notice: 'Group was successfully updated.' }
@@ -77,6 +90,6 @@ class GroupsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def group_params
-    params.require(:group).permit(:name, :icon)
+    params.require(:group).permit(:name, :icon, :group_amount)
   end
 end

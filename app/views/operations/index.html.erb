@@ -45,6 +45,7 @@
           <% end %>
         </div>
         <div class= "group">
+          <%= image_tag @group.icon, style:"width: 40px"%>
           <% @operations.each do |operation| %>
             <div style="margin-top: 15px">
               <%= render operation %> 

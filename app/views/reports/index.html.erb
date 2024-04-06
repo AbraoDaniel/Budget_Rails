@@ -1,0 +1,35 @@
+
+  <% if !(flash[:total_revenue].present? && flash[:total_spent].present?) %>
+  <div class= "session-container">
+    <div class= 'form-login-header'>
+      RELATÓRIO DE TRANSAÇÕES
+    </div>
+    <%= form_tag generate_operation_report_reports_path, method: :post, remote: true do %>
+      <div class="group-name">
+        <%= label_tag :start_date, "Data Inicial" %>
+        <%= date_field :start_date, class: "dates" %>
+      </div>
+
+      <div class="group-name">
+        <%= label_tag :end_date, "Data Final" %>
+        <%= date_field :end_date, class: "dates" %>
+      </div>
+
+      <%= submit_tag "Gerar Relatório", class: "send-button" %>
+    <% end %>
+  </div>
+  <%else %>
+    <div class= "session-container" style="width: 40vw">
+      <div class= 'form-login-header'>
+        REGISTRO DE TRANSAÇÕES ENTRE <%=flash[:start_date]%> E <%=flash[:end_date]%>
+      </div>
+      <div>
+        <%= image_tag "revenue-icon.png", class: "result-icons" %>
+        <p class="report-result">Valor total de receita: <%= number_to_currency(flash[:total_revenue], :unit => "R$ ", :separator => ",", :delimiter => ".") %></p>
+      </div>
+      <div>
+        <%= image_tag "spent-icon.png", class: "result-icons" %>
+        <p class="report-result">Valor total de gastos: <%= number_to_currency(flash[:total_spent], :unit => "R$ ", :separator => ",", :delimiter => ".") %></p>
+      </div>
+  </div>
+  <%end%>

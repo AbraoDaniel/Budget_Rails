@@ -1,4 +1,7 @@
-<div class= "form">
+<div class= "session-container">
+  <div class= 'form-login-header'>
+    <%if group.id%>EDITAR CATEGORIA<%else%>NOVA CATEGORIA<%end%>
+  </div>
   <%= form_with(model: group) do |form| %>
     <% if group.errors.any? %>
       <div style="color: red">

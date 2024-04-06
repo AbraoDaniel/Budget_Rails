@@ -9,19 +9,19 @@
     <div class="group-name">
       Nome
       <br>
-      <input type="text" readonly value=<%= @user.name %> style="margin-top: 5px"/> 
+      <input type="text" readonly value="<%= @user.name || 'Nome não definido' %>" style="margin-top: 5px"/> 
     </div>
 
     <div class="group-name">
       Email
       <br>
-      <input type="email" readonly value=<%= @user.email %> style="margin-top: 5px"/> 
+      <input type="email" readonly value="<%= @user.email %>" style="margin-top: 5px"/> 
     </div>
 
     <div class="group-name">
       Membro desde
       <br>
-      <input type="text" readonly value=<%= @user.created_at.strftime("%d/%m/%Y") %> style="margin-top: 5px"/> 
+      <input type="text" readonly value="<%= @user.created_at.strftime("%d / %m / %Y") %>" style="margin-top: 5px"/> 
     </div>
 
     <div class="actions-link">
