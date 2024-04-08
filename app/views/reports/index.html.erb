@@ -1,10 +1,15 @@
-
-  <% if !(flash[:total_revenue].present? && flash[:total_spent].present?) %>
+<% if !(flash[:total_revenue].present? && flash[:total_spent].present? || flash[:report_values].present?) %>
   <div class= "session-container">
     <div class= 'form-login-header'>
       RELATÓRIO DE TRANSAÇÕES
     </div>
     <%= form_tag generate_operation_report_reports_path, method: :post, remote: true do %>
+      <div class = "group-name">
+        <%= label_tag "Tipo de relatório"%>
+        <div class= "dropdown">
+          <%= select_tag 'report_type',options_for_select(@report_types.collect{ |report_type| [report_type['name'], report_type['source']] })%>
+        </div> 
+      </div>
       <div class="group-name">
         <%= label_tag :start_date, "Data Inicial" %>
         <%= date_field :start_date, class: "dates" %>
@@ -18,18 +23,43 @@
       <%= submit_tag "Gerar Relatório", class: "send-button" %>
     <% end %>
   </div>
-  <%else %>
-    <div class= "session-container" style="width: 40vw">
-      <div class= 'form-login-header'>
-        REGISTRO DE TRANSAÇÕES ENTRE <%=flash[:start_date]%> E <%=flash[:end_date]%>
+<%elsif flash[:report_values].present?%>
+  <h1>UAAAI</h1>
+  <div class= "session-container" style="width: 60vw">
+    <div class= 'form-login-header' style="padding: 5px">
+      REGISTRO DE TRANSAÇÕES POR CATEGORIA ENTRE <%=flash[:start_date]%> E <%=flash[:end_date]%>
+    </div>
+    <div class="report-per-group-result">
+    <% flash[:report_values]['report_data'].each do |report| %>
+      <div style="margin-right: 50px">
+        <div class="result-text" style="font-size: 20px;margin-bottom: 10px;">
+          <%= image_tag report['group_icon'], class: "result-per-group-icons" %>
+          <%= report['group_name'] %>
+        </div>
+        <div class="result-text">
+          <%= image_tag "revenue-icon.png", class: "result-per-group-icons" %>
+          Valor total de receita: <%= number_to_currency(report['total_revenue'], :unit => "R$ ", :separator => ",", :delimiter => ".") %>
+        </div>
+        <div class="result-text" style="margin-bottom: 40px">
+          <%= image_tag "spent-icon.png", class: "result-per-group-icons" %>
+          Valor total de gastos: <%= number_to_currency(report['total_spent'], :unit => "R$ ", :separator => ",", :delimiter => ".") %>
+        </div>
       </div>
-      <div>
-        <%= image_tag "revenue-icon.png", class: "result-icons" %>
-        <p class="report-result">Valor total de receita: <%= number_to_currency(flash[:total_revenue], :unit => "R$ ", :separator => ",", :delimiter => ".") %></p>
-      </div>
-      <div>
-        <%= image_tag "spent-icon.png", class: "result-icons" %>
-        <p class="report-result">Valor total de gastos: <%= number_to_currency(flash[:total_spent], :unit => "R$ ", :separator => ",", :delimiter => ".") %></p>
-      </div>
+    <% end %>
+    </div>
   </div>
-  <%end%>
+<%else %>
+  <div class= "session-container" style="width: 40vw">
+    <div class= 'form-login-header' style="padding: 5px">
+      REGISTRO DE TRANSAÇÕES ENTRE <%=flash[:start_date]%> E <%=flash[:end_date]%>
+    </div>
+    <div>
+      <%= image_tag "revenue-icon.png", class: "result-icons" %>
+      <p class="report-result">Valor total de receita: <%= number_to_currency(flash[:total_revenue], :unit => "R$ ", :separator => ",", :delimiter => ".") %></p>
+    </div>
+    <div>
+      <%= image_tag "spent-icon.png", class: "result-icons" %>
+      <p class="report-result">Valor total de gastos: <%= number_to_currency(flash[:total_spent], :unit => "R$ ", :separator => ",", :delimiter => ".") %></p>
+    </div>
+  </div>
+<%end%>
