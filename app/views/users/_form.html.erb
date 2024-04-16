@@ -1,4 +1,11 @@
 <div class= "session-container">
+  <div class="new-password-warning">
+    <%= image_tag "aviso.png", class: "alert-icon" %>
+    Caso a nova senha não seja informada ou seja inválida, apenas o nome e o email serão atualizados
+  </div>
+  <div class= 'form-login-header'>
+    EDITAR INFORMAÇÕES DO USUÁRIO
+  </div>
   <%= form_with model: @user, url: update_user_user_path(@user.id), method: :put do |form| %>
     <div class= "group-name">
       <%= form.label "Nome", style: "display: block" %>
@@ -12,6 +19,7 @@
 
     <div class= "group-name">
       <%= form.label :password, "Senha", style: "display: block" %>
+      <p>(mínimo de 6 caracteres)</p>
       <%= form.password_field :password, autofocus: true, autocomplete: "new-password", placeholder: "********" %>
     </div>
 
