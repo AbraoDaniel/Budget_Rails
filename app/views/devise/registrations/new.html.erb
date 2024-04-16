@@ -15,9 +15,7 @@
 
     <div class="group-name" style="margin-left: 80px">
       <%= f.label "Senha" %>
-      <% if @minimum_password_length %>
-      <em>(mínimo de <%= @minimum_password_length %> caracteres)</em>
-      <% end %>
+      <p>(mínimo de 6 caracteres)</p>
       <%= f.password_field :password, autocomplete: "new-password", placeholder: "Informe sua senha" %>
     </div>
 
