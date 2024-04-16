@@ -1,4 +1,4 @@
-<% if !(flash[:total_revenue].present? && flash[:total_spent].present? || flash[:report_values].present?) %>
+<% if !(flash[:total_revenue].present? && flash[:total_spent].present? || flash[:report_values].present? || flash[:report_month_values].present?) %>
   <div class= "session-container">
     <div class= 'form-login-header'>
       RELATÓRIO DE TRANSAÇÕES
@@ -24,34 +24,70 @@
     <% end %>
   </div>
 <%elsif flash[:report_values].present?%>
-  <h1>UAAAI</h1>
   <div class= "session-container" style="width: 60vw">
     <div class= 'form-login-header' style="padding: 5px">
-      REGISTRO DE TRANSAÇÕES POR CATEGORIA ENTRE <%=flash[:start_date]%> E <%=flash[:end_date]%>
+      REGISTRO DE TRANSAÇÕES POR CATEGORIA ENTRE <%=flash[:start_date].split('-')[2]%>/<%=flash[:start_date].split('-')[1]%>/<%=flash[:start_date].split('-')[0]%> E <%=flash[:end_date].split('-')[2]%>/<%=flash[:end_date].split('-')[1]%>/<%=flash[:end_date].split('-')[0]%>
     </div>
-    <div class="report-per-group-result">
-    <% flash[:report_values]['report_data'].each do |report| %>
-      <div style="margin-right: 50px">
-        <div class="result-text" style="font-size: 20px;margin-bottom: 10px;">
-          <%= image_tag report['group_icon'], class: "result-per-group-icons" %>
-          <%= report['group_name'] %>
-        </div>
-        <div class="result-text">
-          <%= image_tag "revenue-icon.png", class: "result-per-group-icons" %>
-          Valor total de receita: <%= number_to_currency(report['total_revenue'], :unit => "R$ ", :separator => ",", :delimiter => ".") %>
-        </div>
-        <div class="result-text" style="margin-bottom: 40px">
-          <%= image_tag "spent-icon.png", class: "result-per-group-icons" %>
-          Valor total de gastos: <%= number_to_currency(report['total_spent'], :unit => "R$ ", :separator => ",", :delimiter => ".") %>
-        </div>
+    <%if flash[:report_values]['report_data'].length > 0 %>
+      <div class="report-per-group-result">
+        <% flash[:report_values]['report_data'].each do |report| %>
+          <div style="margin-right: 50px">
+            <div class="result-text" style="font-size: 20px;margin-bottom: 10px;">
+              <%= image_tag report['group_icon'], class: "result-per-group-icons" %>
+              <%= report['group_name'] %>
+            </div>
+            <div class="result-text">
+              <%= image_tag "revenue-icon.png", class: "result-per-group-icons" %>
+              Valor total de receita: <%= number_to_currency(report['total_revenue'], :unit => "R$ ", :separator => ",", :delimiter => ".") %>
+            </div>
+            <div class="result-text" style="margin-bottom: 40px">
+              <%= image_tag "spent-icon.png", class: "result-per-group-icons" %>
+              Valor total de gastos: <%= number_to_currency(report['total_spent'], :unit => "R$ ", :separator => ",", :delimiter => ".") %>
+            </div>
+          </div>
+        <% end %>
       </div>
-    <% end %>
+    <%else%>
+      <div class="no-data-text">
+      <%= image_tag "pasta.png" %>
+      NÃO HÁ REGISTRO DE TRANSAÇÕES NESSE PERÍODO
+      </div>
+    <%end%>
+  </div>
+<%elsif flash[:report_month_values].present?%>
+  <div class= "session-container" style="width: 60vw">
+    <div class= 'form-login-header' style="padding: 5px">
+      REGISTRO DE TRANSAÇÕES MENSAIS
     </div>
+    <%if flash[:report_month_values]['report_data'].length > 0 %>
+      <div class="report-per-group-result">
+        <% flash[:report_month_values]['report_data'].each do |report| %>
+          <div style="margin-right: 50px">
+            <div class="result-text" style="font-size: 20px;margin-bottom: 10px;">
+              <%= report['mounth'] %>
+            </div>
+            <div class="result-text">
+              <%= image_tag "revenue-icon.png", class: "result-per-group-icons" %>
+              Valor total de receita: <%= number_to_currency(report['total_revenue'], :unit => "R$ ", :separator => ",", :delimiter => ".") %>
+            </div>
+            <div class="result-text" style="margin-bottom: 40px">
+              <%= image_tag "spent-icon.png", class: "result-per-group-icons" %>
+              Valor total de gastos: <%= number_to_currency(report['total_spent'], :unit => "R$ ", :separator => ",", :delimiter => ".") %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <%else%>
+      <div class="no-data-text">
+      <%= image_tag "pasta.png" %>
+      NÃO HÁ REGISTRO DE TRANSAÇÕES NESSE PERÍODO
+      </div>
+    <%end%>
   </div>
 <%else %>
   <div class= "session-container" style="width: 40vw">
     <div class= 'form-login-header' style="padding: 5px">
-      REGISTRO DE TRANSAÇÕES ENTRE <%=flash[:start_date]%> E <%=flash[:end_date]%>
+      REGISTRO DE TRANSAÇÕES ENTRE <%=flash[:start_date].split('-')[2]%>/<%=flash[:start_date].split('-')[1]%>/<%=flash[:start_date].split('-')[0]%> E <%=flash[:end_date].split('-')[2]%>/<%=flash[:end_date].split('-')[1]%>/<%=flash[:end_date].split('-')[0]%>
     </div>
     <div>
       <%= image_tag "revenue-icon.png", class: "result-icons" %>

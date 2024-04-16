@@ -18,9 +18,16 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :users, defaults: {format: :json} do 
+    member do
+      put 'update_user'
+    end
+  end
+
   resources :operations, defaults: {format: :json} do
     member do
       delete "delete_operation"
+      put "update_operation"
     end
   end
 end

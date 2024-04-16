@@ -23,6 +23,7 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 20px;
+  margin: 0px 25px;
 }
 
 .result-text {
@@ -30,3 +31,20 @@
   font-weight: bold;
   margin-bottom: 10px;
 }
+
+.no-data-text {
+  color: white;
+  font-weight: bold;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.no-data-text img {
+  display: inline-block;
+  width: 40px;
+  margin-right: 5px;
+  margin-bottom: 14px;
+}
+
+

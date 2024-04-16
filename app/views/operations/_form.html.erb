@@ -2,7 +2,7 @@
   <div class= 'form-login-header'>
     <%= image_tag @group.icon, style:"width: 35px; margin-right: 15px; margin-bottom: -8px"%><%if @operation.id %> EDITAR TRANSAÇÃO<%else%><span style="margin-left: -10px">NOVA TRANSAÇÃO<span><%end%>
   </div>
-  <%= form_with model: @operation, url: @operation.id ? edit_group_operation_path(@operation.group_id,@operation.id) : group_operations_path, method: :post do |form| %>
+  <%= form_with model: @operation, url: @operation.id ? update_operation_operation_path(@operation.id) : group_operations_path, method: :post do |form| %>
     <div class= "group-name">
       <%= form.label "Nome", style: "display: block" %>
       <%= form.text_field :name, value: @operation.name, placeholder: "Insira o nome da transação" %>

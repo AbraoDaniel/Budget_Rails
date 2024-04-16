@@ -1,22 +1,27 @@
-<%= form_with(model: user) do |form| %>
-  <% if user.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:</h2>
+<div class= "session-container">
+  <%= form_with model: @user, url: update_user_user_path(@user.id), method: :put do |form| %>
+    <div class= "group-name">
+      <%= form.label "Nome", style: "display: block" %>
+      <%= form.text_field :name, value: @user.name, placeholder: "Insira o nome da transação" %>
+    </div>
 
-      <ul>
-        <% user.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
+    <div class= "group-name">
+      <%= form.label "Email", style: "display: block" %>
+      <%= form.email_field :email, value: @user.email, autofocus: true, autocomplete: "email" %>
+    </div>
+
+    <div class= "group-name">
+      <%= form.label :password, "Senha", style: "display: block" %>
+      <%= form.password_field :password, autofocus: true, autocomplete: "new-password", placeholder: "********" %>
+    </div>
+
+    <div class="group-name">
+      <%= form.label :password_confirmation, "Confirmar nova senha" %>
+      <%= form.password_field :password_confirmation, autocomplete: "new-password", placeholder: "********" %>
+    </div>
+
+    <div class="actions">
+      <%= form.submit "Salvar" %>
     </div>
   <% end %>
-
-  <div class="group-name">
-    <%= form.label :name, style: "display: block" %>
-    <%= form.text_field :name %>
-  </div>
-
-  <div>
-    <%= form.submit %>
-  </div>
-<% end %>
+</div>
