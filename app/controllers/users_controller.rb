@@ -39,7 +39,7 @@ class UsersController < ApplicationController
   # PATCH/PUT /users/1 or /users/1.json
   def update_user
     @user = User.find(params[:id])
-    if params[:user]['password'].present? && params[:user]['password_confirmation'].present? && params[:user]['password'] == params[:user]['password_confirmation']
+    if params[:user]['password'].length >= 6 && params[:user]['password_confirmation'].length >= 6 && params[:user]['password'] == params[:user]['password_confirmation']
       @user.update(user_params)
     else
       @user.update(name: params[:user]['name'], email: params[:user]['email'])
