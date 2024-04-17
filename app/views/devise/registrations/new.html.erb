@@ -3,23 +3,23 @@
     REGISTRAR NOVA CONTA
   </div>
   <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-    <div class="group-name" style="margin-left: 80px">
+    <div class="group-name">
       <%= f.label "Nome" %>
       <%= f.text_field :email, autofocus: true, autocomplete: "email", placeholder: "Informe seu nome" %>
     </div>
     
-    <div class="group-name" style="margin-left: 80px">
+    <div class="group-name" >
       <%= f.label "Email" %>
       <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "Informe seu email"  %>
     </div>
 
-    <div class="group-name" style="margin-left: 80px">
+    <div class="group-name" >
       <%= f.label "Senha" %>
       <p>(mínimo de 6 caracteres)</p>
       <%= f.password_field :password, autocomplete: "new-password", placeholder: "Informe sua senha" %>
     </div>
 
-    <div class="group-name" style="margin-left: 80px">
+    <div class="group-name" >
       <%= f.label "Confirmar Senha" %>
       <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "input", placeholder: "Confirme sua senha"  %>
     </div>
