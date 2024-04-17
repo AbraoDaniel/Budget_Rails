@@ -1,5 +1,9 @@
 <% if !(flash[:total_revenue].present? && flash[:total_spent].present? || flash[:report_values].present? || flash[:report_month_values].present?) %>
   <div class= "session-container">
+    <div class="new-password-warning">
+      <%= image_tag "aviso.png", class: "alert-icon" %>
+      Caso o relatório selecionado seja "Valor de transações por mês", não há necessidade de informar o período de data
+    </div>
     <div class= 'form-login-header'>
       RELATÓRIO DE TRANSAÇÕES
     </div>
@@ -80,7 +84,7 @@
     <%else%>
       <div class="no-data-text">
       <%= image_tag "pasta.png" %>
-      NÃO HÁ REGISTRO DE TRANSAÇÕES NESSE PERÍODO
+      NÃO HÁ REGISTRO DE TRANSAÇÕES MENSAIS
       </div>
     <%end%>
   </div>
