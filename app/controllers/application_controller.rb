@@ -2,14 +2,27 @@ require 'time_difference'
 
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
+  helper_method :current_user, :user_signed_in?
 
   before_action :authenticate_user!
-  before_action :update_allowed_parameters, if: :devise_controller?
 
-  protected
+  private
 
-  def update_allowed_parameters
-    devise_parameter_sanitizer.permit(:sign_up) { |u| u.permit(:name, :email, :password) }
-    devise_parameter_sanitizer.permit(:account_update) { |u| u.permit(:name, :email, :password, :current_password) }
+  # Retorna o usuário atual logado com base no user_id armazenado na sessão
+  def current_user
+    @current_user ||= User.find_by(id: session[:user_id]) if session[:user_id]
   end
+
+  # Verifica se há um usuário logado
+  def user_signed_in?
+    current_user.present?
+  end
+
+  # Redireciona para a página de login se não houver usuário logado
+  def authenticate_user!
+    unless controller_name == 'splash' && action_name == 'index'
+      redirect_to login_path, alert: 'Você precisa estar logado para acessar esta página.' unless user_signed_in?
+    end
+  end
+  
 end
