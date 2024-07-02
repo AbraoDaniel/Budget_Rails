@@ -1,0 +1,32 @@
+<div class="session-container">
+  <div class='form-login-header'>
+    REGISTRAR NOVA CONTA
+  </div>
+  <%= form_for(@user, url: signup_path, method: :post) do |f| %>
+    <div class="group-name">
+      <%= f.label :name, "Nome" %>
+      <%= f.text_field :name, autofocus: true, autocomplete: "name", placeholder: "Informe seu nome" %>
+    </div>
+    
+    <div class="group-name">
+      <%= f.label :email, "Email" %>
+      <%= f.email_field :email, autocomplete: "email", placeholder: "Informe seu email" %>
+    </div>
+
+    <div class="group-name">
+      <%= f.label :password, "Senha" %>
+      <p>(mínimo de 6 caracteres)</p>
+      <%= f.password_field :password, autocomplete: "new-password", placeholder: "Informe sua senha" %>
+    </div>
+
+    <div class="group-name">
+      <%= f.label :password_confirmation, "Confirmar Senha" %>
+      <%= f.password_field :password_confirmation, autocomplete: "new-password", placeholder: "Confirme sua senha" %>
+    </div>
+
+    <div class="actions">
+      <%= f.submit "Registrar" %>
+    </div>
+  <% end %>
+  <!-- Aqui, você pode incluir links para login ou recuperação de senha, conforme necessário -->
+</div>

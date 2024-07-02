@@ -14,6 +14,9 @@ Rails.application.routes.draw do
 
   get 'login', to: 'sessions#new', as: :new_user_session  # substitui o new_user_session_path
   get 'signup', to: 'registrations#new', as: :new_user_registration  # substitui o new_user_registration_path
+  post 'signup', to: 'registrations#create'
+  delete 'logout', to: 'sessions#destroy', as: :destroy_user_session
+  
   post 'login', to: 'sessions#create'
   delete 'logout', to: 'sessions#destroy'
 

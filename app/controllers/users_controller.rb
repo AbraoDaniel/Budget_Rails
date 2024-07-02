@@ -23,14 +23,21 @@ class UsersController < ApplicationController
       render :new, status: :unprocessable_entity
     end
   end
-
+  
   def update
-    if params[:user]['password'].length >= 6 && params[:user]['password_confirmation'].length >= 6 && params[:user]['password'] == params[:user]['password_confirmation']
-      @user.update(user_params)
+    if params[:user]['password'].present? && params[:user]['password_confirmation'].present? && params[:user]['password'] == params[:user]['password_confirmation']
+      if @user.update(user_params)
+        redirect_to @user, notice: 'User was successfully updated.'
+      else
+        render :edit, status: :unprocessable_entity
+      end
     else
-      @user.update(name: params[:user]['name'], email: params[:user]['email'])
+      if @user.update(name: params[:user]['name'], email: params[:user]['email'])
+        redirect_to @user, notice: 'User was successfully updated.'
+      else
+        render :edit, status: :unprocessable_entity
+      end
     end
-    redirect_to @user
   end
 
   def destroy
