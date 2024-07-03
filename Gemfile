@@ -13,7 +13,6 @@ gem 'sprockets-rails'
 # gem 'pg', '~> 1.1'
 gem 'neo4j'
 gem 'neo4j-ruby-driver', '~> 4.4'
-gem 'bcrypt'
 # gem 'activegraph', '~> 10.0'
 
 # Use the Puma web server [https://github.com/puma/puma]

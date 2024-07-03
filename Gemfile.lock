@@ -74,7 +74,6 @@ GEM
       io-event (~> 1.6, >= 1.6.5)
     async-io (1.43.2)
       async
-    bcrypt (3.1.20)
     bindex (0.8.1)
     bootsnap (1.16.0)
       msgpack (~> 1.2)
@@ -336,7 +335,6 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  bcrypt
   bootsnap
   bullet
   cancancan
