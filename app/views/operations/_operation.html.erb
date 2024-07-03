@@ -5,20 +5,18 @@
     </strong>
 
     <strong>
-      <%if operation.operation_type == 0%>
+      <%if operation.operation_type.to_i == 0 %>
         <%= image_tag "seta-receita.png", class: "receita"%>
-      <%elsif operation.operation_type == 1%>
+      <%elsif operation.operation_type.to_i == 1 %>
         <%= image_tag "seta-gasto.png", class: "gasto"%>
       <%end %>
       <%= number_to_currency(operation.amount, :unit => "R$ ", :separator => ",", :delimiter => ".")  %>
     </strong>
   </div>
+  <%= operation.id %>
   <div class= "group-footers">
     <small class= "timelapse"><%= operation.created_at.strftime("Registrada em %d / %m / %Y")%></small>
     <div class="show-delete">
-      <%= link_to edit_group_operation_path(@group.id, operation.id) do %>
-        <%= image_tag "edit-pencil.png", class:"group-icons" %>
-      <%end%>
       <%= button_to delete_operation_operation_path(@group.id), method: :delete, params: { operation_id: operation.id } do %>
         <%= image_tag "remove-trash.png", class:"group-icons" %>
       <%end%>

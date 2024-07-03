@@ -50,9 +50,30 @@ class Group
   # Método para buscar um grupo por ID
   def self.find(id)
     session = NEO4J_DRIVER.session
-    result = session.run("MATCH (g:Group) WHERE id(g) = $id RETURN g", id: id)
-    group = result.single&.[](:g)&.properties&.merge(id: result.single[:g].id)
-    session.close
-    group ? new(group) : nil
+    begin
+      query = "MATCH (g:Group) WHERE id(g) = $id RETURN g"
+      result = session.run(query, id: id)
+      single_record = result.single
+      group = single_record[:g].properties.merge(id: single_record[:g].id)
+      group ? new(group) : nil
+    ensure
+      session.close
+    end
+  end
+
+  def groups
+    session = NEO4J_DRIVER.session
+    begin
+      query = "MATCH (u:User)-[:HAS_GROUP]->(g:Group) WHERE id(u) = $user_id RETURN g"
+      results = session.run(query, user_id: self.id)
+      # Imediatamente transformar os resultados em uma lista de grupos antes de fechar a sessão.
+      groups = results.map do |result|
+        group_properties = result[:g].properties.merge(id: result[:g].id)
+        Group.new(group_properties)
+      end
+    ensure
+      session.close  # Garantir que a sessão é fechada mesmo se ocorrer um erro.
+    end
+    groups
   end
 end

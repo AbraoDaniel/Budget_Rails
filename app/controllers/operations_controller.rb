@@ -1,84 +1,96 @@
 class OperationsController < ApplicationController
-  before_action :set_operation, only: %i[show edit update destroy new create]
+  # before_action :set_operation, only: %i[show edit update destroy new create]
   before_action :authenticate_user!
 
-  respond_to :html, :json
+  def new
+    @group = Group.find(params[:group_id].to_i)
+    @operation = Operation.new
+    # @operations = Operation.all
+
+    @operation_types = [
+      { 'name' => 'Receita', 'source' => '0' },
+      { 'name' => 'Despesa', 'source' => '1' }
+    ]
+  end
 
   def index
-    @group = Group.find(params[:group_id])
-    @operations = Operation.all.where("group_id = ?", @group.id).order(created_at: :asc) rescue nil
-  end
+    @group = Group.find(params[:group_id].to_i)
+    session = NEO4J_DRIVER.session
+    @operations = session.run("MATCH (o:Operation {group_id: $group_id}) RETURN o ORDER BY o.created_at ASC", group_id: @group.id).map do |result|
+      Operation.new(result["o"].properties)
+    end
+    session.close
 
-  def show; end
-
-  def new
-    @group = Group.find(params[:group_id])
-    @operation = Operation.new
-    @operations = Operation.all
-
-    @operation_types = [
-      { 'name' => 'Receita', 'source' => '0' },
-      { 'name' => 'Despesa', 'source' => '1' }
-    ]
-  end
-
-  def edit
-    @group = Group.find(params[:group_id])
-    @operation = Operation.find_by(id: params[:id]) rescue nil
-    @operation_types = [
-      { 'name' => 'Receita', 'source' => '0' },
-      { 'name' => 'Despesa', 'source' => '1' }
-    ]
+    respond_to do |format|
+      format.html
+      format.json { render json: @operations }
+    end
   end
 
   def create
-    @group = Group.find(params[:group_id])
-    params = operation_params
-    @operation = Operation.new(name: params[:name], amount: params[:amount], operation_type: params[:operation_type], group_id: @group.id)
-    @operation.author = current_user
-    if @operation.present? && params[:amount].to_f > 0
-      if @operation.operation_type == 0
-        sumAmount = @group.group_amount.to_f + params[:amount].to_f
-      else
-        sumAmount = @group.group_amount.to_f - params[:amount].to_f
+    @group = Group.find(params[:group_id].to_i)
+    @operation = Operation.new(operation_params.merge(group_id: @group.id, author_id: current_user.id))
+  
+    if @operation.valid? && params[:operation][:amount].to_f > 0
+      session = NEO4J_DRIVER.session
+      begin
+        # Primeiro, cria a operação
+        result = session.run("CREATE (o:Operation {name: $name, amount: $amount, group_id: $group_id, author_id: $author_id, operation_type: $operation_type, created_at: $created_at}) RETURN id(o)",
+                             name: @operation.name, 
+                             amount: @operation.amount, 
+                             operation_type: @operation.operation_type, 
+                             group_id: @group.id,
+                             author_id: current_user.id,
+                             created_at: DateTime.now)
+        o_id = result.single[0]
+        @operation.id = o_id if o_id.present?
+  
+        # Em seguida, cria a relação entre o grupo e a operação
+        if @operation.id
+          session.run("MATCH (o:Operation), (g:Group) WHERE id(o) = $operation_id AND id(g) = $group_id CREATE (g)-[:HAS_OPERATION]->(o)",
+                      operation_id: @operation.id, group_id: @group.id)
+          apply_transaction_logic # Lógica para atualizar o saldo do grupo, se necessário
+          redirect_to group_operations_path(@group.id), notice: 'Operation was successfully created.'
+        else
+          render :new, alert: 'Failed to create operation.'
+        end
+      ensure
+        session.close
       end
-      @group.update_columns(group_amount: sumAmount)
-      if @operation.save
-        redirect_to group_operations_path(@group.id)
-      end
+    else
+      render :new, alert: 'Invalid operation data.'
     end
   end
 
-  def update_operation
-    @operation = Operation.find_by(id: params[:id]) rescue nil
-    @group_id = @operation.group_id
-    if @operation.update(operation_params)
-      redirect_to group_operations_path(@group_id)
-    end
-  end
-
-  def delete_operation
-    @operation = Operation.find_by(id: params[:operation_id]) rescue nil
-    @group = Group.find(@operation.group_id)
-    if @operation.present?
-      if @operation.operation_type == 0
-        sumAmount = @group.group_amount.to_f - @operation.amount.to_f
-      else
-        sumAmount = @group.group_amount.to_f + @operation.amount.to_f
-      end
-      @group.update_columns(group_amount: sumAmount)
-    end
-    if @operation.destroy
-      redirect_to group_operations_path(@group.id)
-    end
+  def find(id)
+    session = NEO4J_DRIVER.session
+    result = session.run("MATCH (g:Group) WHERE id(g) = $id RETURN g", id: id)
+    user = result.single&.[](:g)&.properties&.merge(id: result.single[:g].id)
+    session.close
+    user ? new(user) : nil
   end
 
   private
 
-  def set_operation
+  def apply_transaction_logic
+    session = NEO4J_DRIVER.session
+    begin
+      # Calcula o novo saldo com base no tipo de operação
+      new_amount = if @operation.operation_type == '0' # Receita
+                     @group.group_amount.to_f + @operation.amount.to_f
+                   else # Despesa
+                     @group.group_amount.to_f - @operation.amount.to_f
+                   end
+  
+      # Atualiza o grupo com o novo saldo
+      session.run("MATCH (g:Group) WHERE id(g) = $group_id SET g.group_amount = $new_amount",
+                  group_id: @group.id, new_amount: new_amount)
+    ensure
+      session.close
+    end
   end
 
   def operation_params
-    params.require(:operation).permit(:name, :amount, :operation_type, :group_id)
+    params.require(:operation).permit(:name, :amount, :operation_type)
   end
 end

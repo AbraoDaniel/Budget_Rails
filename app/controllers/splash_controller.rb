@@ -5,7 +5,7 @@ class SplashController < ApplicationController
   def index
     # Aqui, substitua `user_signed_in?` por sua própria verificação de autenticação
     if user_signed_in?
-      redirect_to groups_path
+      render :index
     else
       render :index
     end
