@@ -10,7 +10,10 @@ gem 'rails', '~> 7.0.4', '>= 7.0.4.2'
 gem 'sprockets-rails'
 
 # Use postgresql as the database for Active Record
-gem 'pg', '~> 1.1'
+# gem 'pg', '~> 1.1'
+gem 'neo4j'
+gem 'neo4j-ruby-driver', '~> 4.4'
+# gem 'activegraph', '~> 10.0'
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem 'puma', '~> 5.0'
@@ -49,7 +52,7 @@ gem 'bootsnap', require: false
 # gem "sassc-rails"
 
 # Install devise
-gem 'devise'
+# gem 'devise'
 
 # Install cancancan
 gem 'cancancan'

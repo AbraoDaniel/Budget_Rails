@@ -18,18 +18,14 @@
       <input type="email" readonly value="<%= @user.email %>" style="margin-top: 5px"/> 
     </div>
 
-    <div class="group-name">
-      Membro desde
-      <br>
-      <input type="text" readonly value="<%= @user.created_at.strftime("%d / %m / %Y") %>" style="margin-top: 5px"/> 
-    </div>
-
     <div class="actions-link">
       <%= link_to "Editar usuário", edit_user_path %>
     </div>
 
     <div class="remove-user-button">
-      <%= button_to "Remover usuário", @user, method: :delete %>
+      <%= button_to user_path(@user.id), method: :delete do %>
+        Remover usuário
+      <%end%>
     </div>
     
   </div>

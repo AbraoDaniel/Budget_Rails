@@ -13,8 +13,8 @@
       <strong>Valor total de receita:</strong>
       R$
       <%= @operations.inject(0) do |sum, t| 
-        if t.operation_type == 0
-          sum += t.amount 
+        if t.operation_type.to_i == 0
+          sum += t.amount.to_i
         end
         sum
       end%> 
@@ -25,8 +25,8 @@
       <strong>Valor total de despesas:</strong>
       R$
       <%= @operations.inject(0) do |sum, t| 
-        if t.operation_type == 1
-          sum += t.amount 
+        if t.operation_type.to_i == 1
+          sum += t.amount.to_i
         end
         sum
       end%> 

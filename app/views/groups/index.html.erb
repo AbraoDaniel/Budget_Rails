@@ -12,9 +12,9 @@
       <%= image_tag "person.png", class:"my-profile-icon"%>
     <%end%>
    
-    <%= button_to destroy_user_session_path, method: :delete, class:"close-app" do %> 
-      <%= image_tag "close-app.png", class:"close-app"%>
-    <%end%>
+    <%= button_to destroy_user_session_path, method: :delete, class: "close-app" do %>
+      <%= image_tag "close-app.png", class: "close-app" %>
+    <% end %>
   </div>
 </div>
 
@@ -32,19 +32,19 @@
   </div>
   <div id="groups">
     <% @groups.each do |group| %>
-      <%if can? :manage, group%>
+      <%if can? :manage, group %>
         <div class= "group">
-          <%= link_to group_operations_path(group), id: "group-container" do %>
+          <%= link_to group_operations_path(group.id), id: "group-container" do %>
             <%= render group %>
           <%end%>
           <div class= "group-footers">
             <div>
             </div>
             <div class= "show-delete">
-              <%= link_to edit_group_path(group) do %>
+              <%= link_to edit_group_path(group.id) do %>
                 <%= image_tag "edit-pencil.png", class:"group-icons" %>
               <%end%>
-              <%= button_to group, method: :delete, class:"group-icons" do %>
+              <%= button_to group_path(group.id), method: :delete, class:"group-icons" do %>
                 <%= image_tag "remove-trash.png", class:"group-icons" %>
               <%end%>
             </div>

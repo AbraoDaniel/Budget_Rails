@@ -1,0 +1,22 @@
+<div class="sessions-wrapper">  
+  <div class= "session-container">
+    <div class= 'form-login-header'>
+      ACESSAR CONTA
+    </div>
+    <%= form_tag(login_path, method: :post) do %>
+      <div class="field">
+        <%= image_tag "person.png", class: "login-icons" %>
+        <%= email_field_tag :email, nil, autofocus: true, autocomplete: "email", placeholder: "Informe seu email", class: "input" %>
+      </div>
+
+      <div class="field">
+        <%= image_tag "padlock-locked.png", class: "login-icons" %>
+        <%= password_field_tag :password, nil, autocomplete: "current-password", placeholder: "Informe sua senha", class: "input" %>
+      </div>
+
+      <div class="actions">
+        <%= submit_tag "Acessar" %>
+      </div>
+    <% end %>
+  </div>
+</div>
