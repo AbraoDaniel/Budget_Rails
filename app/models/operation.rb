@@ -1,6 +1,6 @@
 class Operation
   include ActiveModel::Model
-  attr_accessor :id, :name, :amount, :operation_type, :created_at, :group_id, :author_id
+  attr_accessor :id, :name, :amount, :operation_type, :created_at, :updated_at, :group_id, :author_id, :operation_id
 
   # Inicializador com valores padrões para atributos
   def initialize(attributes = {})
@@ -13,12 +13,12 @@ class Operation
   def save
     session = NEO4J_DRIVER.session
     if id.nil?
-      result = session.run("CREATE (o:Operation {name: $name, amount: $amount, operation_type: $operation_type, created_at: $created_at, group_id: $group_id, author_id: $author_id}) RETURN id(o)",
-                           name: name, amount: amount, operation_type: operation_type, created_at: DateTime.now, group_id: group_id, author_id: author_id)
+      result = session.run("CREATE (o:Operation {name: $name, amount: $amount, operation_type: $operation_type, created_at: $created_at, updated_at: $updated_at, group_id: $group_id, author_id: $author_id, operation_id: $operation_id}) RETURN id(o)",
+                           name: name, amount: amount, operation_type: operation_type, created_at: DateTime.now, updated_at: DateTime.now, group_id: group_id, author_id: author_id, operation_id: operation_id)
       @id = result.single[0]
     else
-      session.run("MATCH (o:Operation) WHERE id(o) = $id SET o += {name: $name, amount: $amount, operation_type: $operation_type, created_at: $created_at, group_id: $group_id, author_id: $author_id}",
-                  id: id, name: name, amount: amount, operation_type: operation_type, created_at: DateTime.now, group_id: group_id, author_id: author_id)
+      session.run("MATCH (o:Operation) WHERE id(o) = $id SET o += {name: $name, amount: $amount, operation_type: $operation_type, created_at: $created_at, updated_at: $updated_at, group_id: $group_id, author_id: $author_id, operation_id: $operation_id}",
+                  id: id, name: name, amount: amount, operation_type: operation_type, created_at: DateTime.now, updated_at: DateTime.now, group_id: group_id, author_id: author_id, operation_id: operation_id)
     end
     session.close
     self
@@ -26,11 +26,15 @@ class Operation
 
   def self.find(id)
     session = NEO4J_DRIVER.session
-    result = session.run("MATCH (o:Operation) WHERE id(o) = $id RETURN o", id: id)
-    operation = result.single&.[](:o)&.properties&.merge(id: result.single[:o].id)
-    session.close
-    operation ? new(operation) : nil
+    begin
+      query = "MATCH (o:Operation) WHERE id(o) = $id RETURN o"
+      result = session.run(query, id: id)
+      single_record = result.single
+      operation = single_record[:o].properties.merge(id: single_record[:o].id)
+      operation ? new(operation) : nil
+    ensure
+      session.close
+    end
   end
-
   # Você precisará adaptar outros métodos que operam sobre a coleção de operações
 end

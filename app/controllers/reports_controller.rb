@@ -23,7 +23,6 @@ class ReportsController < ApplicationController
     when 'values_per_groups'
       if start_date.present? && end_date.present?
         report_values = get_total_operations_per_group(start_date, end_date, current_user.id)
-        raise report_values.inspect
         redirect_to reports_path, flash: { report_values: report_values, start_date: start_date, end_date: end_date}
       end
     when 'values_per_month'
@@ -59,8 +58,6 @@ class ReportsController < ApplicationController
     SUM(CASE WHEN o.operation_type = '1' THEN toInteger(o.amount) ELSE 0 END) AS total_spent
     """
     results = session.run(query, author_id: user_id, start_date: start_date, end_date: end_date).map(&:properties)
-    raise results.inspect
-    
     session.close
     results
   end

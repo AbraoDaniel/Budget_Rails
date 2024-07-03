@@ -44,7 +44,7 @@
               <%= link_to edit_group_path(group.id) do %>
                 <%= image_tag "edit-pencil.png", class:"group-icons" %>
               <%end%>
-              <%= button_to group, method: :delete, class:"group-icons" do %>
+              <%= button_to group_path(group.id), method: :delete, class:"group-icons" do %>
                 <%= image_tag "remove-trash.png", class:"group-icons" %>
               <%end%>
             </div>

@@ -1,5 +1,5 @@
 class User
-  attr_accessor :id, :name, :email, :encrypted_password
+  attr_accessor :id, :name, :email, :encrypted_password, :created_at, :updated_at
   include ActiveModel::Model
 
   def initialize(attributes = {})
@@ -7,6 +7,8 @@ class User
     @name = attributes[:name]
     @email = attributes[:email]
     @encrypted_password = attributes[:encrypted_password]
+    @created_at = attributes[:created_at]
+    @updated_at = attributes[:updated_at]
   end
 
   # Implementação de um método personalizado para buscar por qualquer atributo
@@ -31,18 +33,17 @@ class User
     self
   end
 
-  def destroy
-    session = NEO4J_DRIVER.session
-    session.run("MATCH (u:User) WHERE id(u) = $id DELETE u", id: id)
-    session.close
-  end
-
   def self.find(id)
     session = NEO4J_DRIVER.session
-    result = session.run("MATCH (u:User) WHERE id(u) = $id RETURN u", id: id)
-    user = result.single&.[](:u)&.properties&.merge(id: result.single[:u].id)
-    session.close
-    user ? new(user) : nil
+    begin
+      query = "MATCH (u:User) WHERE id(u) = $id RETURN u"
+      result = session.run(query, id: id)
+      single_record = result.single
+      user = single_record[:u].properties.merge(id: single_record[:u].id)
+      user ? new(user) : nil
+    ensure
+      session.close
+    end
   end
 
   def create_group(attributes)
@@ -61,6 +62,9 @@ class User
     session = NEO4J_DRIVER.session
     query = "MATCH (u:User), (g:Group) WHERE id(u) = $user_id AND id(g) = $group_id CREATE (u)-[:HAS_GROUP]->(g)"
     session.run(query, user_id: self.id, group_id: group_id)
+    session.run("MATCH (o:Group) WHERE id(o) = $id SET o.group_id = $group_id",
+              id: group_id,
+              group_id: group_id)
     session.close
   end
 

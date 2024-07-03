@@ -1,6 +1,7 @@
 class GroupsController < ApplicationController
   # before_action :set_group, only: %i[show edit update destroy]
-  before_action :authenticate_user!
+  # before_action :set_group, only: [:show, :edit, :update, :destroy]
+  # before_action :authenticate_user!
 
   # GET /groups or /groups.json
   def index
@@ -18,6 +19,7 @@ class GroupsController < ApplicationController
 
   # GET /groups/1/edit
   def edit
+    set_group
     set_group_types
   end
 
@@ -34,25 +36,55 @@ class GroupsController < ApplicationController
 
   # PATCH/PUT /groups/1 or /groups/1.json
   def update
-    set_icon
-    if @group.update(group_params)
-      redirect_to groups_path, notice: 'Group was successfully updated.'
+    @group = Group.find(params[:id].to_i)
+    if @group
+      session = NEO4J_DRIVER.session
+      begin
+        # Atualiza o grupo com os novos valores
+        session.run("MATCH (g:Group) WHERE id(g) = $id SET g += {name: $name, icon: $icon, updated_at: $updated_at}",
+                    id: @group.id,
+                    name: group_params[:name],
+                    icon: params[:group][:group_type], # Supondo que icon está sendo passado corretamente
+                    updated_at: DateTime.now)
+        flash[:notice] = 'Group was successfully updated.'
+        redirect_to groups_path
+      rescue => e
+        flash[:alert] = "Failed to update group: #{e.message}"
+        render :edit
+      ensure
+        session.close
+      end
     else
-      render :edit, alert: 'Failed to update group.'
+      flash[:alert] = "Group not found."
+      redirect_to groups_path
     end
   end
 
   # DELETE /groups/1 or /groups/1.json
   def destroy
-    @group.destroy
-    redirect_to groups_url, notice: 'Group was successfully destroyed.'
+    set_group
+    session = NEO4J_DRIVER.session
+    begin
+      query = """
+        MATCH (g:Group) WHERE ID(g) = $group_id
+        DETACH DELETE g
+      """
+      session.run(query, group_id: @group.id.to_i)
+      session.close
+      redirect_to groups_url, notice: 'Group was successfully destroyed.'
+    rescue => e
+      session.close
+      flash[:alert] = "Failed to destroy group: #{e.message}"
+      redirect_to groups_url
+    end
   end
 
   private
 
   # Use callbacks to share common setup or constraints between actions.
   def set_group
-    @group = Group.find_by(id: params[:id])
+    @group = Group.find(params[:id].to_i)
+    # @group = Group.find_by(id: params[:id])
   end
 
   def set_group_types
