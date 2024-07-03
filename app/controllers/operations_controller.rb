@@ -1,12 +1,9 @@
 class OperationsController < ApplicationController
-  # before_action :set_operation, only: %i[show edit update destroy new create]
   before_action :authenticate_user!
 
   def new
     @group = Group.find(params[:group_id].to_i)
     @operation = Operation.new
-    # @operations = Operation.all
-
     @operation_types = [
       { 'name' => 'Receita', 'source' => '0' },
       { 'name' => 'Despesa', 'source' => '1' }
@@ -42,7 +39,6 @@ class OperationsController < ApplicationController
     if @operation.valid? && params[:operation][:amount].to_f > 0
       session = NEO4J_DRIVER.session
       begin
-        # Primeiro, cria a operação
         result = session.run("CREATE (o:Operation {name: $name, amount: $amount, group_id: $group_id, author_id: $author_id, operation_type: $operation_type, created_at: $created_at, updated_at: $updated_at}) RETURN id(o)",
                              name: @operation.name, 
                              amount: @operation.amount, 
@@ -54,7 +50,6 @@ class OperationsController < ApplicationController
         o_id = result.single[0]
         @operation.id = o_id if o_id.present?
   
-        # Em seguida, cria a relação entre o grupo e a operação
         if @operation.id
           session.run("MATCH (o:Operation) WHERE id(o) = $id SET o.operation_id = $operation_id",
               id: @operation.id,
@@ -62,7 +57,7 @@ class OperationsController < ApplicationController
 
           session.run("MATCH (o:Operation), (g:Group) WHERE id(o) = $operation_id AND id(g) = $group_id CREATE (g)-[:HAS_OPERATION]->(o)",
                       operation_id: @operation.id, group_id: @group.id)
-          apply_transaction_logic # Lógica para atualizar o saldo do grupo, se necessário
+          apply_transaction_logic
           redirect_to group_operations_path(@group.id), notice: 'Operation was successfully created.'
         else
           render :new, alert: 'Failed to create operation.'
@@ -81,7 +76,7 @@ class OperationsController < ApplicationController
     if @operation
       session = NEO4J_DRIVER.session
       begin
-        # Atualiza a operação com os novos valores
+        
         session.run("MATCH (o:Operation) WHERE id(o) = $id SET o += {name: $name, amount: $amount, operation_type: $operation_type, updated_at: $updated_at}",
                     id: @operation.id,
                     name: params[:operation][:name],
@@ -89,7 +84,7 @@ class OperationsController < ApplicationController
                     operation_type: params[:operation][:operation_type],
                     updated_at: DateTime.now)
         
-        # Lógica opcional para recalcular e atualizar os totais do grupo, se necessário
+        
         apply_transaction_logic if params[:operation][:amount].to_f > 0
   
         flash[:notice] = 'Operation was successfully updated.'
@@ -106,21 +101,12 @@ class OperationsController < ApplicationController
     end
   end
 
-  # def find(id)
-  #   session = NEO4J_DRIVER.session
-  #   result = session.run("MATCH (g:Group) WHERE id(g) = $id RETURN g", id: id)
-  #   user = result.single&.[](:g)&.properties&.merge(id: result.single[:g].id)
-  #   session.close
-  #   user ? new(user) : nil
-  # end
-
   def delete_operation
     @group = Group.find(params[:id].to_i)
-    operation_id = params[:operation_id]  # Assumindo que o ID da operação é passado como parâmetro
+    operation_id = params[:operation_id]
   
     session = NEO4J_DRIVER.session
     begin
-      # Query para deletar a operação e seus relacionamentos
       query = """
         MATCH (o:Operation)
         WHERE ID(o) = $operation_id
@@ -129,12 +115,12 @@ class OperationsController < ApplicationController
       session.run(query, operation_id: operation_id.to_i)
   
       flash[:notice] = 'Operation was successfully deleted.'
-      redirect_to group_operations_path(@group.id)  # Redireciona para a lista de operações do grupo
+      redirect_to group_operations_path(@group.id)
     rescue => e
       flash[:alert] = "Failed to delete operation: #{e.message}"
       redirect_to group_operations_path(@group.id)
     ensure
-      session.close  # Garantir que a sessão seja fechada após a operação
+      session.close
     end
   end
 
@@ -143,14 +129,12 @@ class OperationsController < ApplicationController
   def apply_transaction_logic
     session = NEO4J_DRIVER.session
     begin
-      # Calcula o novo saldo com base no tipo de operação
-      new_amount = if @operation.operation_type == '0' # Receita
+      new_amount = if @operation.operation_type == '0' 
                      @group.group_amount.to_f + @operation.amount.to_f
-                   else # Despesa
+                   else 
                      @group.group_amount.to_f - @operation.amount.to_f
                    end
   
-      # Atualiza o grupo com o novo saldo
       session.run("MATCH (g:Group) WHERE id(g) = $group_id SET g.group_amount = $new_amount",
                   group_id: @group.id, new_amount: new_amount)
     ensure

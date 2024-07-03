@@ -31,16 +31,13 @@ class UsersController < ApplicationController
     if @user
       session = NEO4J_DRIVER.session
       begin
-        # Verifica se a senha e confirmação estão presentes e são iguais
         if params[:user]['password'].present? && params[:user]['password_confirmation'].present? && params[:user]['password'] == params[:user]['password_confirmation']
-          # Atualiza usuário com senha criptografada e demais dados
           session.run("MATCH (u:User) WHERE id(u) = $id SET u += {name: $name, email: $email, encrypted_password: $encrypted_password}",
                       id: @user.id,
                       name: params[:user]['name'],
                       email: params[:user]['email'],
                       encrypted_password: params[:user]['password'])
         else
-          # Atualiza apenas os campos de nome e email
           session.run("MATCH (u:User) WHERE id(u) = $id SET u += {name: $name, email: $email}",
                       id: @user.id,
                       name: params[:user]['name'],
@@ -80,7 +77,6 @@ class UsersController < ApplicationController
     @user = User.find(params[:id].to_i)
     session = NEO4J_DRIVER.session
     begin
-      # Query para deletar todas as operações relacionadas aos grupos do usuário
       delete_operations_query = """
         MATCH (u:User)-[:HAS_GROUP]->(g:Group)-[:HAS_OPERATION]->(o:Operation)
         WHERE ID(u) = $user_id
@@ -88,7 +84,6 @@ class UsersController < ApplicationController
       """
       session.run(delete_operations_query, user_id: @user.id.to_i)
   
-      # Query para deletar todos os grupos que o usuário possui
       delete_groups_query = """
         MATCH (u:User)-[:HAS_GROUP]->(g:Group)
         WHERE ID(u) = $user_id
@@ -96,7 +91,6 @@ class UsersController < ApplicationController
       """
       session.run(delete_groups_query, user_id: @user.id.to_i)
   
-      # Por fim, deleta o usuário
       delete_user_query = """
         MATCH (u:User)
         WHERE ID(u) = $user_id
@@ -110,7 +104,7 @@ class UsersController < ApplicationController
       flash[:alert] = "Failed to destroy user and related data: #{e.message}"
       redirect_to users_url
     ensure
-      session.close  # Garante que a sessão seja fechada após a operação
+      session.close
     end
   end
 

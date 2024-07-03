@@ -11,7 +11,6 @@ class User
     @updated_at = attributes[:updated_at]
   end
 
-  # Implementação de um método personalizado para buscar por qualquer atributo
   def self.find_by(attribute)
     session = NEO4J_DRIVER.session
     query = "MATCH (u:User) WHERE u.#{attribute.keys.first} = $value RETURN u"
@@ -47,10 +46,9 @@ class User
   end
 
   def create_group(attributes)
-    attributes[:user_id] = self.id  # Atribui o ID do usuário ao grupo
+    attributes[:user_id] = self.id 
     group = Group.new(attributes)
     if group.save
-      # Cria a relação após o grupo ser salvo com sucesso
       create_group_relationship(group.id)
       return group
     else
@@ -73,13 +71,12 @@ class User
     begin
       query = "MATCH (u:User)-[:HAS_GROUP]->(g:Group) WHERE id(u) = $user_id RETURN g"
       results = session.run(query, user_id: self.id)
-      # Imediatamente transformar os resultados em uma lista de grupos antes de fechar a sessão.
       groups = results.map do |result|
         group_properties = result[:g].properties.merge(id: result[:g].id)
         Group.new(group_properties)
       end
     ensure
-      session.close  # Garantir que a sessão é fechada mesmo se ocorrer um erro.
+      session.close
     end
     groups
   end

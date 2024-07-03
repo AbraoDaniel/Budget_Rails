@@ -1,8 +1,4 @@
 class GroupsController < ApplicationController
-  # before_action :set_group, only: %i[show edit update destroy]
-  # before_action :set_group, only: [:show, :edit, :update, :destroy]
-  # before_action :authenticate_user!
-
   # GET /groups or /groups.json
   def index
     @groups = current_user.groups
@@ -40,11 +36,10 @@ class GroupsController < ApplicationController
     if @group
       session = NEO4J_DRIVER.session
       begin
-        # Atualiza o grupo com os novos valores
         session.run("MATCH (g:Group) WHERE id(g) = $id SET g += {name: $name, icon: $icon, updated_at: $updated_at}",
                     id: @group.id,
                     name: group_params[:name],
-                    icon: params[:group][:group_type], # Supondo que icon está sendo passado corretamente
+                    icon: params[:group][:group_type],
                     updated_at: DateTime.now)
         flash[:notice] = 'Group was successfully updated.'
         redirect_to groups_path
@@ -81,10 +76,8 @@ class GroupsController < ApplicationController
 
   private
 
-  # Use callbacks to share common setup or constraints between actions.
   def set_group
     @group = Group.find(params[:id].to_i)
-    # @group = Group.find_by(id: params[:id])
   end
 
   def set_group_types
@@ -102,7 +95,6 @@ class GroupsController < ApplicationController
     @group.icon = params[:group][:group_type] if params[:group][:group_type].present?
   end
 
-  # Only allow a list of trusted parameters through.
   def group_params
     params.require(:group).permit(:name, :icon, :group_amount)
   end

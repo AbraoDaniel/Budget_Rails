@@ -1,19 +1,15 @@
 Rails.application.routes.draw do
-  # Se você está removendo o Devise, remova a linha abaixo
-  # devise_for :users
-
-  # As rotas para usuários podem precisar de métodos customizados para criar e autenticar, se você não está mais usando Devise
   resources :users, only: [:show, :update, :destroy, :index, :edit] do
     collection do
-      post 'create' # Supondo que você tenha um método customizado para criar usuários
-      post 'login'  # Método de login, se necessário
+      post 'create'
+      post 'login' 
     end
   end
 
   root to: "splash#index"
 
-  get 'login', to: 'sessions#new', as: :new_user_session  # substitui o new_user_session_path
-  get 'signup', to: 'registrations#new', as: :new_user_registration  # substitui o new_user_registration_path
+  get 'login', to: 'sessions#new', as: :new_user_session 
+  get 'signup', to: 'registrations#new', as: :new_user_registration 
   post 'signup', to: 'registrations#create'
   delete 'logout', to: 'sessions#destroy', as: :destroy_user_session
   
@@ -30,7 +26,6 @@ Rails.application.routes.draw do
     end
   end
 
-  # Essa configuração JSON pode permanecer, se ainda for relevante
   resources :users, defaults: {format: :json} do 
     member do
       put 'update_user'

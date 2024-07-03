@@ -12,7 +12,6 @@ class Group
     @group_amount = attributes.fetch(:group_amount, 0)
   end
 
-  # Método para criar ou atualizar um grupo
   def save
     session = NEO4J_DRIVER.session
     if id.nil?
@@ -27,7 +26,6 @@ class Group
     self
   end
 
-  # Método para encontrar um grupo por qualquer atributo
   def self.find_by(attribute)
     session = NEO4J_DRIVER.session
     query = "MATCH (g:Group) WHERE g.#{attribute.keys.first} = $value RETURN g"
@@ -37,17 +35,13 @@ class Group
     group ? new(group) : nil
   end
 
-  # Método para excluir um grupo
   def destroy
     session = NEO4J_DRIVER.session
-    # Primeiro remove a relação
     session.run("MATCH (u:User)-[r:HAS_GROUP]->(g:Group) WHERE id(g) = $id DELETE r", id: self.id)
-    # Depois remove o grupo
     session.run("MATCH (g:Group) WHERE id(g) = $id DELETE g", id: self.id)
     session.close
   end
 
-  # Método para buscar um grupo por ID
   def self.find(id)
     session = NEO4J_DRIVER.session
     begin
@@ -66,13 +60,12 @@ class Group
     begin
       query = "MATCH (u:User)-[:HAS_GROUP]->(g:Group) WHERE id(u) = $user_id RETURN g"
       results = session.run(query, user_id: self.id)
-      # Imediatamente transformar os resultados em uma lista de grupos antes de fechar a sessão.
       groups = results.map do |result|
         group_properties = result[:g].properties.merge(id: result[:g].id)
         Group.new(group_properties)
       end
     ensure
-      session.close  # Garantir que a sessão é fechada mesmo se ocorrer um erro.
+      session.close
     end
     groups
   end

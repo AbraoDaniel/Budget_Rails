@@ -2,7 +2,6 @@ class Operation
   include ActiveModel::Model
   attr_accessor :id, :name, :amount, :operation_type, :created_at, :updated_at, :group_id, :author_id, :operation_id
 
-  # Inicializador com valores padrões para atributos
   def initialize(attributes = {})
     attributes.each do |key, value|
       send("#{key}=", value)
@@ -36,5 +35,4 @@ class Operation
       session.close
     end
   end
-  # Você precisará adaptar outros métodos que operam sobre a coleção de operações
 end
