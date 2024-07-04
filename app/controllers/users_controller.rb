@@ -17,7 +17,6 @@ class UsersController < ApplicationController
   end
 
   def create
-    raise 'aqui'.inspect
     @user = User.new(user_params)
     if @user.save
       redirect_to @user, notice: 'User was successfully created.'
@@ -80,23 +79,9 @@ class UsersController < ApplicationController
       delete_operations_query = """
         MATCH (u:User)-[:HAS_GROUP]->(g:Group)-[:HAS_OPERATION]->(o:Operation)
         WHERE ID(u) = $user_id
-        DETACH DELETE o
+        DETACH DELETE u, g, o
       """
       session.run(delete_operations_query, user_id: @user.id.to_i)
-  
-      delete_groups_query = """
-        MATCH (u:User)-[:HAS_GROUP]->(g:Group)
-        WHERE ID(u) = $user_id
-        DETACH DELETE g
-      """
-      session.run(delete_groups_query, user_id: @user.id.to_i)
-  
-      delete_user_query = """
-        MATCH (u:User)
-        WHERE ID(u) = $user_id
-        DETACH DELETE u
-      """
-      session.run(delete_user_query, user_id: @user.id.to_i)
   
       flash[:notice] = 'User and all related data were successfully destroyed.'
       redirect_to root_url

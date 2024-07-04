@@ -61,8 +61,9 @@ class GroupsController < ApplicationController
     session = NEO4J_DRIVER.session
     begin
       query = """
-        MATCH (g:Group) WHERE ID(g) = $group_id
-        DETACH DELETE g
+        MATCH (u:Group)-[:HAS_OPERATION]->(o:Operation)
+        WHERE ID(u) = $group_id
+        DETACH DELETE o, u
       """
       session.run(query, group_id: @group.id.to_i)
       session.close
