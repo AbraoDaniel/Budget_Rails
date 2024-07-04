@@ -41,7 +41,7 @@ class ReportsController < ApplicationController
       WHERE o.author_id = $author_id AND date(o.created_at) >= date($start_date) AND date(o.created_at) <= date($end_date)
       RETURN 
         SUM(CASE WHEN o.operation_type = '0' THEN toInteger(o.amount) ELSE 0 END) AS total_revenue,
-        SUM(CASE WHEN o.operation_type = '1' THEN toInteger(o.amount) ELSE -toInteger(o.amount) END) AS total_spent
+        SUM(CASE WHEN o.operation_type = '1' THEN toInteger(o.amount) ELSE 0 END) AS total_spent
     """
     result = session.run(query, author_id: user_id, start_date: start_date, end_date: end_date).single
     session.close
@@ -51,13 +51,20 @@ class ReportsController < ApplicationController
   def get_total_operations_per_group(start_date, end_date, user_id)
     session = NEO4J_DRIVER.session
     query = """
-    MATCH (o:Operation)-[:BELONGS_TO]->(g:Group)
+    MATCH (g:Group)-[:HAS_OPERATION]->(o:Operation)
     WHERE o.author_id = $author_id AND datetime(o.created_at) >= datetime($start_date) AND datetime(o.created_at) <= datetime($end_date)
     RETURN g.name AS group_name, g.icon AS group_icon,
     SUM(CASE WHEN o.operation_type = '0' THEN toInteger(o.amount) ELSE 0 END) AS total_revenue,
     SUM(CASE WHEN o.operation_type = '1' THEN toInteger(o.amount) ELSE 0 END) AS total_spent
     """
-    results = session.run(query, author_id: user_id, start_date: start_date, end_date: end_date).map(&:properties)
+    results = session.run(query, author_id: user_id, start_date: start_date, end_date: end_date).map do |record|
+      {
+        group_name: record[:group_name],
+        group_icon: record[:group_icon],
+        total_revenue: record[:total_revenue],
+        total_spent: record[:total_spent]
+      }
+    end
     session.close
     results
   end
